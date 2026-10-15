@@ -4,6 +4,7 @@ import functools
 import json
 import re
 import threading
+import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -57,7 +58,8 @@ class Backend:
             elif payload["password"] != PASSWORD:
                 result = {"error": "密碼不正確"}
             else:
-                token = "fixture-token-" + str(len(self.calls))
+                duration = 90 * 86400000 if payload.get("remember") is True else 12 * 3600000
+                token = str(int(time.time() * 1000) + duration) + ".fixture-token-" + str(len(self.calls))
                 self.tokens.add(token)
                 result = {"token": token}
         elif payload.get("token") not in self.tokens:
@@ -146,6 +148,39 @@ def main():
             assert "saveState" not in backend.calls
             print("PASS: desktop and iPad emulation load the same grades, photos, XP, cards, gifts and weights")
 
+            for page in [desktop, ipad]:
+                login_count = backend.calls.count("login")
+                page.reload(wait_until="domcontentloaded")
+                page.wait_for_function("loaded && !loading")
+                assert page.locator("#teacher-password").count() == 0
+                assert backend.calls.count("login") == login_count
+                assert snapshot(page) == {k: initial[k] for k in ["rosters", "extras"]}
+            print("PASS: desktop and iPad page reloads restore login without asking for a password")
+
+            login_count = backend.calls.count("login")
+            reopened = desktop.context.new_page()
+            reopened.on("pageerror", lambda e: errors.append(str(e)))
+            reopened.goto(base, wait_until="domcontentloaded")
+            reopened.wait_for_function("loaded && !loading")
+            assert reopened.locator("#teacher-password").count() == 0
+            assert backend.calls.count("login") == login_count
+            reopened.close()
+            print("PASS: a new tab restores the existing backend credential")
+
+            restored_context = browser.new_context(storage_state=desktop.context.storage_state())
+            contexts.append(restored_context)
+            restored_context.route("https://script.google.com/**", backend.route)
+            restored = restored_context.new_page()
+            restored.on("pageerror", lambda e: errors.append(str(e)))
+            restored.goto(base, wait_until="domcontentloaded")
+            restored.wait_for_function("loaded && !loading")
+            assert restored.locator("#teacher-password").count() == 0
+            assert backend.calls.count("login") == login_count
+            assert snapshot(restored) == {k: initial[k] for k in ["rosters", "extras"]}
+            restored_context.close()
+            contexts.remove(restored_context)
+            print("PASS: a fresh browser context restores login using persistent storage alone")
+
             desktop.locator('#students [data-add="s1"]').click()
             desktop.wait_for_function("!dirty && !saving && revision === 8")
             ipad.evaluate("pollCloud()")
@@ -217,11 +252,46 @@ def main():
             backend.offline = False
             print("PASS: network failure offers the same Google backend without exposing a password in the URL")
 
+            temporary = new_page()
+            temporary.locator("#remember-login").uncheck()
+            login(temporary)
+            assert temporary.evaluate("localStorage.getItem(portableSessionKey())") is None
+            temporary.reload(wait_until="domcontentloaded")
+            temporary.locator("#teacher-password").wait_for()
+            print("PASS: opting out on a shared device never persists the credential")
+
+            expired = new_page()
+            login(expired)
+            expired.evaluate("localStorage.setItem(portableSessionKey(),(Date.now()-1000)+'.expired')")
+            expired.reload(wait_until="domcontentloaded")
+            expired.locator("#teacher-password").wait_for()
+            assert expired.evaluate("localStorage.getItem(portableSessionKey())") is None
+            print("PASS: expired credentials are discarded and return to login")
+
+            forget = new_page()
+            login(forget)
+            forget.evaluate("""async() => {
+                await soundReady;
+                await soundStore('readwrite',s=>s.put({key:'p6:s1',blob:new Blob(['fixture-sound'],{type:'audio/wav'})}));
+                dirty=true;
+            }""")
+            forget.locator("#settings").click()
+            forget.locator("#forget-login").click()
+            assert forget.evaluate("loaded && !!localStorage.getItem(portableSessionKey())")
+            forget.evaluate("dirty=false")
+            forget.locator("#forget-login").click()
+            forget.locator("#teacher-password").wait_for()
+            assert forget.evaluate("localStorage.getItem(portableSessionKey())") is None
+            assert forget.evaluate("soundReady.then(()=>studentSounds.has('p6:s1'))")
+            print("PASS: forget-login protects unsaved changes and preserves IndexedDB recordings")
+
             for page in [desktop, ipad, wrong]:
                 saved = page.evaluate("JSON.stringify(Object.entries(localStorage))")
-                assert PASSWORD not in saved and "fixture-token-" not in saved
+                assert PASSWORD not in saved
+            for page in [desktop, ipad]:
+                assert page.evaluate("!!localStorage.getItem(portableSessionKey())")
             assert not errors, errors
-            print("PASS: no uncaught browser errors or password/session persistence")
+            print("PASS: no uncaught browser errors or password persistence; only session credentials are remembered")
             for ctx in contexts:
                 ctx.close()
             browser.close()
