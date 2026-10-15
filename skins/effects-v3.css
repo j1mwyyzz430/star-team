@@ -1,0 +1,15 @@
+/* The frame carries the spectacle; student names, controls and balances stay above it. */
+.skin-card.tier-0{animation:none}
+.skin-card.tier-0:after{animation:v3EdgeBreath 5s ease-in-out infinite;box-shadow:none}
+@keyframes v3EdgeBreath{50%{opacity:.9}}
+.v3-foil{position:absolute;inset:-40% -60%;z-index:2;pointer-events:none;opacity:.13;background:repeating-linear-gradient(112deg,transparent 0 12%,#e6ffff 16%,#e5b1ff 19%,transparent 24% 44%);mix-blend-mode:screen;transform:translate3d(-18%,0,0) rotate(-8deg);animation:v3FoilPass 14s ease-in-out infinite}
+@keyframes v3FoilPass{0%,20%,100%{transform:translate3d(-18%,0,0) rotate(-8deg);opacity:.08}55%{transform:translate3d(18%,0,0) rotate(-8deg);opacity:.19}}
+.fx-crystal .v3-foil{background:repeating-linear-gradient(65deg,transparent 0 15%,#d6c8ff 17%,#ffffff 18%,transparent 20% 40%);opacity:.16}
+.fx-eclipse .v3-foil{background:linear-gradient(112deg,transparent 25%,#ffce8b 48%,transparent 65%)}
+.fx-seraph .v3-foil,.fx-omni .v3-foil,.fx-genesis .v3-foil{opacity:.18;background:repeating-linear-gradient(115deg,transparent 0 9%,#fff6c9 12%,#b3f9ff 16%,#ffb2e7 19%,transparent 24% 43%)}
+.skin-tile[data-tier='0'] .skin-swatch{border-width:2px;box-shadow:inset 0 0 0 1px #fff3,0 0 15px color-mix(in srgb,var(--skin-color) 20%,transparent)}
+.skin-tile[data-tier='0'] .skin-swatch-name{padding-right:40px;font-size:19px;line-height:1.35}
+.skin-card .student-name,.skin-card .level-row{position:relative;z-index:7}
+.calm .v3-foil{animation:none;opacity:.06}
+@media(prefers-reduced-motion:reduce){.v3-foil{animation:none;opacity:.06}.skin-card.tier-0:after{animation:none}}
+@media(max-width:720px){.skin-swatch-name{overflow-wrap:anywhere}.v3-foil{animation-duration:18s}}

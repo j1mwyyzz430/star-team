@@ -1,0 +1,45 @@
+/* Student identity always sits above collectible art and decorative borders. */
+#students .student-top{position:relative;isolation:isolate;gap:16px;flex-wrap:nowrap;min-height:108px}
+#students .student-top>.avatar,#skin-stage .student-top>.avatar,#winner-card .student-top>.avatar{width:104px;height:104px;min-width:104px;border:5px solid #fff6df;box-shadow:0 0 0 3px #17213eaa,0 6px 22px #0007;object-position:50% 22%;position:relative;z-index:9}
+#students .student-top>.avatar{font-size:38px}
+#students .student-top>span:not(.avatar):not(.plus){min-width:0}
+#students .student-name{max-width:220px;font-size:25px;line-height:1.2}
+#students .textured .student-top:before,#skin-stage .textured .student-top:before{content:'';position:absolute;inset:-10px 15% -10px -10px;z-index:-1;border-radius:60px 18px 18px 60px;background:linear-gradient(90deg,#070d23dd,#070d2380 70%,transparent)}
+#students .textured .art-shade{background:linear-gradient(90deg,#081021c9,transparent 70%),linear-gradient(0deg,#060c21b0,transparent 55%)}
+#students .textured .skin-art{width:112%;left:-2%;transform-origin:85% 42%}
+#students .textured .add-student{padding:24px 20px 18px}
+#students .plus{width:40px;height:40px;min-width:40px}
+#students .xp-track{max-width:90%}#students .level-row{font-size:14px;line-height:1.5}
+.awakening-seal{position:absolute;top:-16px;left:24px;z-index:8;background:#1a1833;border:1px solid #ffe2a1;color:#ffecbd;padding:3px 12px;border-radius:8px;font-weight:800;box-shadow:0 0 12px #ffdba544;pointer-events:none}
+.equip-mini .awakening-seal{display:none}
+.awakened .skin-visuals:after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 82% 36%,color-mix(in srgb,var(--skin-color) 30%,transparent),transparent 42%);mix-blend-mode:screen;animation:collectionCore 4s ease-in-out infinite}
+@keyframes collectionCore{0%,100%{opacity:.15;transform:scale(.96)}50%{opacity:.65;transform:scale(1.04)}}
+.collection-tabs{margin:24px 0 16px;gap:10px}.collection-tabs button{border:2px solid #b5a0d4;padding:14px 20px}.collection-tabs [aria-pressed=true]{background:#352357;color:#fff1cd;border-color:#6f47b3}
+.collection-banner{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 30px;color:#fff6dc;background:radial-gradient(ellipse at 100% 0%,#6d408f,transparent 60%),linear-gradient(120deg,#15233f,#302346);border:1px solid #b398d0;border-radius:22px;box-shadow:0 6px 0 #63408022}
+.collection-banner .eyebrow{color:#e7c87c;font-size:12px}.collection-banner h3{margin:10px 0;font-size:23px}.collection-banner p{margin:5px 0 9px}.collection-banner small{color:#ded0ef;line-height:1.6;display:block}.collection-emblem{font-size:90px;color:#ffe9ae;text-shadow:0 0 30px #ffe59d55;line-height:1;flex:none;transform:rotate(-12deg)}
+.awakening-steps{display:grid;gap:6px;margin:10px 0 16px}.awakening-steps>div{padding:10px 9px;border-radius:9px;background:#ffffff06;border:1px solid #ffffff1a;color:#bbb8c7}.awakening-steps b{font-size:14px}.awakening-steps small{display:block;font-size:12px;margin:4px 0 0}.awakening-steps .earned{color:#fff0bb;background:#aa84481a;border-color:#cfb96c88}.collection-auto{display:block;margin:10px 3px 3px;font-size:12px;line-height:1.6;color:#cec6df}
+.collection-overlay{position:fixed;inset:0;z-index:10050;pointer-events:none;overflow:hidden;contain:layout paint;isolation:isolate;width:100vw;height:100dvh;color:white}
+#collection-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+#collection-scene{display:contents;pointer-events:none}
+.scene-vignette{z-index:0}.scene-portrait{z-index:1}
+.scene-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 72% 40%,color-mix(in srgb,var(--scene-color) 18%,#081022),#071022df 70%);animation:sceneVeil var(--scene-time) ease both}
+.scene-portrait{position:absolute;inset:2% -3% 0 25%;opacity:0;mask-image:linear-gradient(90deg,transparent,#000 28%,#000 85%,transparent);animation:sceneArrival var(--scene-time) cubic-bezier(.2,.7,.2,1) both}
+.scene-portrait .skin-art{height:100%;width:100%;animation:none!important;transform:none!important;border-radius:0}.scene-portrait .art-shade,.scene-portrait .art-glint{display:none}
+.scene-copy{position:absolute;inset:0;display:flex;justify-content:center;align-items:flex-start;padding:5vw 7vw;flex-direction:column;gap:12px;z-index:5;text-shadow:0 3px 18px #000;animation:sceneWords var(--scene-time) ease both}
+.scene-copy>.avatar{width:112px;height:112px;border:5px solid #fff5d4;box-shadow:0 0 25px var(--scene-color);margin-bottom:8px}
+.scene-copy>strong{font-size:clamp(26px,4vw,52px);max-width:60vw;overflow-wrap:anywhere}.scene-title{font-size:clamp(32px,5vw,72px);color:#fff0ad;line-height:1.2}.scene-kicker{color:var(--scene-color);font-weight:800;letter-spacing:3px;font-size:16px}.scene-copy>small{font-size:16px;max-width:65vw;line-height:1.7}.scene-prism{background:linear-gradient(100deg,#ffb4d9,#ffe6a6,#baffdd,#aeebff,#ddc4ff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 6px #000)}
+.scene-small .scene-vignette,.scene-small .scene-portrait{display:none}.scene-small .scene-copy{justify-content:flex-end;align-items:center;padding-bottom:10vh;text-align:center}.scene-small .scene-copy>strong{font-size:22px;background:#141c35db;padding:8px 18px;border-radius:20px}.scene-small .scene-title{font-size:38px}.scene-small .scene-kicker,.scene-small .scene-copy>small{display:none}
+.scene-awakened .scene-portrait{animation-name:sceneAwakenedArrival}.scene-fx-void .scene-portrait{animation-name:sceneVoidArrival}.scene-fx-tide .scene-portrait,.scene-fx-aurora .scene-portrait{animation-name:sceneTideArrival}.scene-fx-rail .scene-portrait,.scene-fx-comet .scene-portrait{animation-name:sceneDashArrival}
+@keyframes sceneVeil{0%,100%{opacity:0}12%,78%{opacity:1}}
+@keyframes sceneWords{0%{opacity:0;transform:translateY(18px)}18%,77%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes sceneArrival{0%{opacity:0;transform:translateX(8%) scale(1.07)}18%,75%{opacity:.8;transform:translateX(0) scale(1)}100%{opacity:0;transform:translateX(-2%) scale(1.02)}}
+@keyframes sceneAwakenedArrival{0%{opacity:0;transform:translateX(18%) scale(.75)}22%{opacity:.95;transform:translateX(0) scale(1.05)}75%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.1)}}
+@keyframes sceneVoidArrival{0%{opacity:0;transform:scale(.4) rotate(12deg)}25%,75%{opacity:.95;transform:scale(1) rotate(0)}100%{opacity:0;transform:scale(1.08)}}
+@keyframes sceneTideArrival{0%{opacity:0;transform:translateY(40%) rotate(-8deg)}25%,75%{opacity:.9;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(-10%)}}
+@keyframes sceneDashArrival{0%{opacity:0;transform:translateX(65%) skewX(-10deg)}20%,75%{opacity:.95;transform:translateX(0) skewX(0)}100%{opacity:0;transform:translateX(-10%)}}
+@media(min-width:1400px){.wrap{max-width:1760px}#students.grid{grid-template-columns:repeat(3,minmax(0,1fr))}#students .student-top>.avatar{width:100px;height:100px;min-width:100px}}
+@media(max-width:1000px){#students .student-top>.avatar{width:88px;height:88px;min-width:88px}#students .student-name{font-size:23px}#students .student-top{gap:12px}#students .textured .add-student{padding:20px 16px}}
+@media(max-width:760px){#students.grid{grid-template-columns:1fr}#students .student-top>.avatar{width:100px;height:100px;min-width:100px}.collection-banner{padding:20px}.collection-emblem{font-size:56px}.collection-banner h3{font-size:20px}.collection-tabs button{flex:1;padding:11px;font-size:14px}.scene-copy{padding:6vw;justify-content:flex-end;padding-bottom:14vh}.scene-copy>.avatar{width:90px;height:90px}.scene-copy>strong,.scene-copy>small{max-width:90vw}.scene-portrait{inset:0 -20% 12% 0;mask-image:linear-gradient(0deg,transparent,#000 40%,#000 88%,transparent)}.scene-small .scene-copy{padding-bottom:10vh}}
+@media(max-width:380px){#students .student-top>.avatar{width:78px;height:78px;min-width:78px}#students .student-name{font-size:21px}#students .plus{width:32px;height:32px;min-width:32px}.collection-emblem{display:none}}
+.calm .awakened .skin-visuals:after{animation:none;opacity:.2}
+@media(prefers-reduced-motion:reduce){.awakened .skin-visuals:after{animation:none;opacity:.2}.collection-overlay{display:none}}

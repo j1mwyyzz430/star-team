@@ -1,0 +1,12 @@
+/* The opaque material sprites and sculpted canvas ornaments carry the spectacle.
+   These surface details stay below all student names, controls and balances. */
+.textured.tier-0 .v3-foil{opacity:.18;mix-blend-mode:screen}
+.textured.tier-0.fx-tide .v3-foil{background:radial-gradient(ellipse at 85% 100%,#44ebff50,transparent 65%),linear-gradient(115deg,transparent 42%,#d6ffff44 49%,transparent 56%)}
+.textured.tier-0.fx-aurora .v3-foil{background:linear-gradient(140deg,transparent 35%,#bafff12b 47%,#a5d3ff35 52%,transparent 67%)}
+.textured.tier-0.fx-crystal .v3-foil{background:repeating-conic-gradient(from 20deg at 85% 20%,transparent 0deg 28deg,#eee0ff26 30deg 34deg,transparent 37deg 64deg)}
+.textured.tier-0.fx-void .v3-foil{background:radial-gradient(ellipse at 80% 50%,transparent 25%,#c455ec44 36%,transparent 54%)}
+.textured.tier-0.fx-seraph .v3-foil{background:conic-gradient(from 15deg at 85% 25%,transparent,#f8df9433,transparent 18%,#f6fbff38,transparent 45%)}
+.textured.tier-0.fx-genesis .v3-foil{opacity:.27;background:conic-gradient(from 40deg at 75% 40%,#ffd76844,transparent 20%,#dfacff33,transparent 47%,#b7faff44,transparent 73%,#fff3ba44)}
+.textured.tier-0 .skin-border{image-rendering:auto;pointer-events:none}
+.calm .textured.tier-0 .v3-foil{animation:none!important;transform:none!important}
+@media(prefers-reduced-motion:reduce){.textured.tier-0 .v3-foil{animation:none!important;transform:none!important}}
