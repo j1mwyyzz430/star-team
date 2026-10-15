@@ -6,6 +6,7 @@ const collectionTitles={fire:'熔火龍息',ice:'冰河踏境',rainbow:'萬蝶�
 function collectionStart(k){const i=collectionBeasts.findIndex(b=>b.id===k?.id);return i<0?Infinity:100+i*120+5*i*(i-1)}
 function collectionExtra(s){return Math.max(0,(s?.xp??s?.score??0)-xpAtLevel(100))}
 function collectionStage(s,k=skinOf(s)){if(!k||k.tier!==0)return 0;if(k.series==='mecha')return canEquip(s,k)?3:0;const n=collectionExtra(s)-collectionStart(k);return n<0?0:n<40?1:n<80?2:3}
+function collectionCanPlay(s){return levelOf(s).level>=100&&collectionStage(s)>=2}
 function collectionMilestones(){return [...collectionBeasts.flatMap(k=>['專屬邊框','出場動畫','終極演出'].map((name,i)=>({xp:xpAtLevel(100)+collectionStart(k)+40*i,name:k.name+' · '+name,id:k.id,stage:i+1}))),...skins.filter(k=>k.series==='mecha').map(k=>({xp:skinUnlockXp(k),name:k.name+' · 新角色',id:k.id,stage:3}))].sort((a,b)=>a.xp-b.xp)}
 const collectionRoad=collectionMilestones();
 function collectionNext(s){return collectionRoad.find(m=>m.xp>(s.xp??s.score??0))}
@@ -29,10 +30,28 @@ openSkin=function(id){collectionOldOpen(id);const k=skins.find(k=>k.id===id),s=s
 };
 function collectionPreview(kind){const s=students.find(s=>s.id===$('#skin-student').value),k=skins.find(k=>k.id===previewSkinId);if(!s||!k)return;skinBurst($('#skin-preview-card'),{...s,theme:k.id});collectionPlay({...s,theme:k.id},kind,{preview:true,stage:3});}
 $('#skin-demo').onclick=()=>collectionPreview('small');$('#collection-big-demo').onclick=()=>collectionPreview('big');$('#collection-super-demo').onclick=()=>collectionPreview('rainbow');
-function collectionAward(before,after,ids){const changed=after.filter(s=>ids.includes(s.id)&&s.score>(before.find(b=>b.id===s.id)?.score??s.score));if(!changed.length)return;const priority=s=>s.score%30===0?3:s.score%10===0?2:1;const s=changed.reduce((a,b)=>priority(b)>priority(a)?b:a),kind=priority(s)===3?'rainbow':priority(s)===2?'big':'small';collectionPlay(s,kind,{names:changed.map(s=>s.name)});tone(kind==='small'?0:1);const newly=changed.flatMap(s=>collectionRoad.filter(m=>m.xp>(before.find(b=>b.id===s.id)?.xp??before.find(b=>b.id===s.id)?.score??0)&&m.xp<=(s.xp??s.score)).map(m=>s.name+'：'+m.name));if(newly.length)toast('新收藏！'+newly.join('、'));else if(kind==='small')toast(changed.length===1?'＋1 ★ 太棒了！':changed.length+' 位學生 ＋1 ★')}
+function collectionAward(before,after,ids){
+ const changed=after.filter(s=>ids.includes(s.id)&&s.score>(before.find(b=>b.id===s.id)?.score??s.score));if(!changed.length)return;
+ const priority=s=>s.score%30===0?3:s.score%10===0?2:1,highest=list=>list.reduce((a,b)=>priority(b)>priority(a)?b:a);
+ // A class award may include both locked and awakened students. Only the latter perform.
+ const unlocked=changed.filter(collectionCanPlay),performers=unlocked.length?unlocked:changed;
+ const s=highest(performers),kind=priority(s)===3?'rainbow':priority(s)===2?'big':'small';
+ collectionPlay(s,kind,{names:performers.map(s=>s.name)});tone(priority(highest(changed))===1?0:1);
+ const newly=changed.flatMap(s=>collectionRoad.filter(m=>m.xp>(before.find(b=>b.id===s.id)?.xp??before.find(b=>b.id===s.id)?.score??0)&&m.xp<=(s.xp??s.score)).map(m=>s.name+'：'+m.name));
+ if(newly.length)toast('新收藏！'+newly.join('、'));else if(kind==='small')toast(changed.length===1?'＋1 ★ 太棒了！':changed.length+' 位學生 ＋1 ★');
+}
 showWinnerSkin=function(s){collectionOldWinner(s);collectionPlay(s,'wheel')};
 function collectionEnd(){collectionScene=null;$('#collection-overlay').hidden=true;$('#collection-scene').innerHTML='';if(collectionRaf&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(collectionRaf);collectionRaf=0}
 function collectionPlay(s,kind,{preview=false,stage=collectionStage(s),names=[s.name]}={}){
+ // Stage 1 unlocks only the border; stage 2 unlocks the full-screen entrance.
+ // Explicit wardrobe previews may show locked effects without granting them.
+ if(!preview){
+  stage=collectionStage(s);
+  if(!collectionCanPlay(s)){
+   if(kind!=='small')toast(names.join('、')+(kind==='wheel'?'被抽中了！':kind==='rainbow'?'獲得彩色星星！':'獲得大星星！'));
+   return false;
+  }
+ }
  if(motionReduced()){if(preview)toast('動態已關閉。可在頁頂開啟動態，或檢查裝置的減少動態設定。');else if(kind!=='small')toast(names.join('、')+(kind==='wheel'?'被抽中了！':kind==='rainbow'?'獲得彩色星星！':'獲得大星星！'));return}
  const k=skinOf(s)||{id:'plain',name:'星星小隊',fx:'rainbow',color:'#f5c96f',dark:'#211734',rank:1},now=performance.now();
  // Keep a major scene on-screen while a quick subsequent award adds a pulse.

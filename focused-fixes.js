@@ -6,7 +6,7 @@ const focusPlay=collectionPlay,focusEnd=collectionEnd,focusOverlay=$('#collectio
 focusOverlay.setAttribute('popover','manual');let focusFallback=null;
 collectionEnd=function(){if(focusOverlay.hidePopover){try{focusOverlay.hidePopover()}catch{}}if(focusFallback?.open)focusFallback.close();focusEnd()};
 collectionPlay=function(s,kind,options={}){
- focusPlay(s,kind,options);if(!collectionScene||focusOverlay.hidden)return;
+ if(focusPlay(s,kind,options)===false||!collectionScene||focusOverlay.hidden)return;
  document.body.append(focusOverlay);
  if(focusOverlay.showPopover){try{focusOverlay.showPopover()}catch{}}
  else{if(!focusFallback){focusFallback=document.createElement('dialog');focusFallback.className='reward-viewport-host';document.body.append(focusFallback);focusFallback.addEventListener('cancel',()=>collectionEnd())}focusFallback.append(focusOverlay);if(!focusFallback.open)focusFallback.showModal()}
