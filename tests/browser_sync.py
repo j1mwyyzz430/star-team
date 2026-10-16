@@ -22,7 +22,8 @@ class QuietHandler(SimpleHTTPRequestHandler):
 
 
 class Backend:
-    def __init__(self, photo):
+    def __init__(self, photo, modern=False):
+        self.modern = modern
         self.state = {
             "version": 7, "lastOpId": "fixture-initial",
             "rosters": {
@@ -78,6 +79,8 @@ class Backend:
                               "rosters": copy.deepcopy(arg["rosters"]),
                               "extras": copy.deepcopy(arg["extras"])}
                 result = self.state
+        if self.modern and "rosters" in result:
+            result = {**result, "capabilities": {"classManagement": True}}
         route.fulfill(status=200, content_type="application/json",
                       headers={"Access-Control-Allow-Origin": "*"}, body=json.dumps(result))
 
