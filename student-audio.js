@@ -1,16 +1,54 @@
 'use strict';
 // Student audio is isolated by grade + student id and kept as blobs in IndexedDB.
-const studentSounds=new Map();let soundDBPromise,playingSound=null,soundURL='',soundTarget=null,soundDraft=null,recording=null,recordStream=null,recordTimer=0,soundGeneration=0,soundBusy=false,suppressRewardTone=false;
+const studentSounds=new Map();let soundDBPromise,soundTarget=null,soundDraft=null,recording=null,recordStream=null,recordTimer=0,soundGeneration=0,soundBusy=false,suppressRewardTone=false;
 function soundKey(g,id){return g+':'+id}
 function soundDB(){return soundDBPromise??=new Promise((resolve,reject)=>{const r=indexedDB.open('star-team-student-audio-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('sounds',{keyPath:'key'});r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function soundStore(mode,action){const db=await soundDB();return new Promise((resolve,reject)=>{const tx=db.transaction('sounds',mode),r=action(tx.objectStore('sounds'));tx.oncomplete=()=>resolve(r.result);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||Error('儲存取消'))})}
 const soundReady=soundStore('readonly',s=>s.getAll()).then(rows=>rows.forEach(r=>studentSounds.set(r.key,r))).catch(()=>{});
-function stopStudentSound(){if(playingSound){playingSound.pause();playingSound=null}if(soundURL){URL.revokeObjectURL(soundURL);soundURL=''}}
-function playStudentSound(blob){stopStudentSound();soundURL=URL.createObjectURL(blob);const a=new Audio(soundURL);playingSound=a;a.onended=()=>{if(playingSound===a)stopStudentSound()};a.play().catch(()=>{if(playingSound===a){stopStudentSound();toast('未能播放音效，請開啟聲音後再試。')}})}
+// One AudioContext clock keeps all award clips aligned, even when decoding takes different times.
+const soundBuffers=new WeakMap(),playingSources=new Set();
+let soundPlaybackGeneration=0,soundMix=null;
+function stopStudentSound(){
+ soundPlaybackGeneration++;
+ for(const source of playingSources){source.onended=null;try{source.stop()}catch{}source.disconnect()}
+ playingSources.clear();soundMix?.disconnect();soundMix=null;
+}
+function decodeStudentSound(blob,ctx){
+ if(!soundBuffers.has(blob))soundBuffers.set(blob,blob.arrayBuffer().then(bytes=>ctx.decodeAudioData(bytes)).catch(e=>{soundBuffers.delete(blob);throw e}));
+ return soundBuffers.get(blob);
+}
+async function playStudentSounds(blobs,{reward=false,level=0}={}){
+ stopStudentSound();const token=soundPlaybackGeneration;
+ if(document.hidden)return;
+ try{
+  audioContext??=new(window.AudioContext||window.webkitAudioContext)();const ctx=audioContext;
+  // Resume inside the click handler, before waiting for IndexedDB or decoding (iPad autoplay).
+  const [,clips]=await Promise.all([ctx.resume(),Promise.resolve(blobs)]);
+  if(token!==soundPlaybackGeneration)return;
+  const results=await Promise.allSettled(clips.map(blob=>decodeStudentSound(blob,ctx)));
+  if(token!==soundPlaybackGeneration)return;
+  const buffers=results.filter(r=>r.status==='fulfilled').map(r=>r.value);
+  if(!buffers.length){if(reward)oldRewardTone(level);if(clips.length)toast('未能讀取個人音效，請重新上傳。');return}
+  const mix=ctx.createGain();mix.gain.value=1/buffers.length;mix.connect(ctx.destination);soundMix=mix;
+  // Create every source before choosing the shared start time.
+  const sources=buffers.map(buffer=>{const source=ctx.createBufferSource();source.buffer=buffer;source.connect(mix);playingSources.add(source);source.onended=()=>{source.disconnect();playingSources.delete(source);if(soundMix===mix&&!playingSources.size){mix.disconnect();soundMix=null}};return source});
+  const startAt=ctx.currentTime+.04;for(const source of sources)source.start(startAt);
+  if(buffers.length<clips.length)toast('部分音效無法讀取，其餘已同步播放。');
+ }catch(e){if(token===soundPlaybackGeneration){stopStudentSound();if(reward)oldRewardTone(level);toast('未能播放音效，請開啟聲音後再試。')}}
+}
+function playStudentSound(blob){return playStudentSounds([blob])}
 const oldRewardTone=tone;tone=function(...args){if(!suppressRewardTone)return oldRewardTone(...args)};
 const soundAward=collectionAward;
-collectionAward=function(before,after,ids){const changed=after.filter(s=>ids.includes(s.id)&&s.score>(before.find(b=>b.id===s.id)?.score??s.score)),clips=changed.map(s=>studentSounds.get(soundKey(grade,s.id))).filter(Boolean);const custom=audioEnabled&&changed.length===1&&clips.length===1;suppressRewardTone=custom;try{soundAward(before,after,ids)}finally{suppressRewardTone=false}if(custom)playStudentSound(clips[0].blob)};
-const soundDialog=document.createElement('dialog');soundDialog.id='student-sound-dialog';soundDialog.innerHTML='<div class="dialog-head"><h2 id="student-sound-title">加分音效</h2><button type="button" id="sound-close" aria-label="關閉">×</button></div><p>錄低一句打氣說話，或者上傳 MP3／M4A／WAV。每次為這位學生加分就會播放；最多保留前 8 秒。</p><p class="small">音效保存在這部裝置的瀏覽器，換裝置需重新上傳；可先下載備份。全班加分使用原本提示音。</p><div class="row"><button id="sound-record" type="button">● 開始錄音</button><button id="sound-stop" type="button" disabled>■ 停止錄音</button></div><label class="field"><span>上傳音訊（最多 10 MB）</span><input id="sound-file" type="file" accept="audio/*,.mp3,.m4a,.wav"></label><p id="sound-status" role="status" aria-live="polite"></p><div class="row"><button id="sound-preview" type="button">▶ 試聽</button><button id="sound-download" type="button">下載備份</button><button id="sound-remove" type="button">移除</button><button id="sound-save" class="primary" type="button">儲存音效</button></div>';
+collectionAward=function(before,after,ids){
+ const changed=after.filter(s=>ids.includes(s.id)&&s.score>(before.find(b=>b.id===s.id)?.score??s.score));
+ const custom=audioEnabled&&changed.length>0,awardGrade=grade;
+ suppressRewardTone=custom;try{soundAward(before,after,ids)}finally{suppressRewardTone=false}
+ if(custom){
+  const clips=soundReady.then(()=>changed.map(s=>studentSounds.get(soundKey(awardGrade,s.id))?.blob).filter(Boolean));
+  playStudentSounds(clips,{reward:true,level:changed.some(s=>s.score%10===0)?1:0});
+ }
+};
+const soundDialog=document.createElement('dialog');soundDialog.id='student-sound-dialog';soundDialog.innerHTML='<div class="dialog-head"><h2 id="student-sound-title">加分音效</h2><button type="button" id="sound-close" aria-label="關閉">×</button></div><p>錄低一句打氣說話，或者上傳 MP3／M4A／WAV。每次為這位學生加分就會播放；最多保留前 8 秒。</p><p class="small">音效保存在這部裝置的瀏覽器，換裝置需重新上傳；可先下載備份。全班或整組加分時，有設定音效且實際獲加分的學生錄音會同步播放，合播音量會自動調整。沒有錄音時使用原本提示音；請先開啟頁頂「音效」。</p><div class="row"><button id="sound-record" type="button">● 開始錄音</button><button id="sound-stop" type="button" disabled>■ 停止錄音</button></div><label class="field"><span>上傳音訊（最多 10 MB）</span><input id="sound-file" type="file" accept="audio/*,.mp3,.m4a,.wav"></label><p id="sound-status" role="status" aria-live="polite"></p><div class="row"><button id="sound-preview" type="button">▶ 試聽</button><button id="sound-download" type="button">下載備份</button><button id="sound-remove" type="button">移除</button><button id="sound-save" class="primary" type="button">儲存音效</button></div>';
 document.body.append(soundDialog);
 function soundControls(){const active=!!recording||soundBusy;$('#sound-record').disabled=active;$('#sound-stop').disabled=!recording;$('#sound-file').disabled=active;for(const id of ['sound-preview','sound-download','sound-remove'])$('#'+id).disabled=active||!soundDraft;$('#sound-save').disabled=active}
 async function openStudentSound(s){const token=++soundGeneration;soundTarget={key:soundKey(grade,s.id),name:s.name};soundDraft=null;$('#student-sound-title').textContent=s.name+' · 加分音效';$('#sound-status').textContent='正在讀取…';$('#sound-file').value='';soundDialog.showModal();await soundReady;if(token!==soundGeneration)return;soundDraft=studentSounds.get(soundTarget.key)?.blob||null;$('#sound-status').textContent=soundDraft?'已設定個人音效。':'未設定，使用原本提示音。';soundControls()}
