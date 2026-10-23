@@ -5,12 +5,12 @@ const code=fs.readFileSync(__dirname+'/../student-audio.js','utf8');
 const player=code.slice(code.indexOf('// One AudioContext clock'),code.indexOf('const soundDialog='));
 const blob=id=>({arrayBuffer:async()=>id});
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function setup(){
+function setup(deduction=()=>{}){
  const sources=[],mixes=[],tones=[],toasts=[],awards=[];
  const audio={currentTime:2,resume:async()=>{},destination:{},decodeAudioData:async id=>{if(id==='bad')throw Error('bad sound');return {id}},
   createGain(){const g={gain:{value:1},connect(){},disconnect(){this.disconnected=true}};mixes.push(g);return g},
   createBufferSource(){const source={connect(m){this.mix=m},disconnect(){this.disconnected=true},start(at){this.started=at},stop(){this.stopped=true}};sources.push(source);return source}};
- const c={audioContext:audio,window:{},document:{hidden:false},studentSounds:new Map(),soundReady:Promise.resolve(),audioEnabled:true,grade:'p6',suppressRewardTone:false,soundKey:(g,id)=>g+':'+id,toast:m=>toasts.push(m),tone:level=>tones.push(level)};
+ const c={deduct:deduction,students:[],deductionSoundKey:'global:deduct',audioContext:audio,window:{},document:{hidden:false},studentSounds:new Map(),soundReady:Promise.resolve(),audioEnabled:true,grade:'p6',suppressRewardTone:false,soundKey:(g,id)=>g+':'+id,toast:m=>toasts.push(m),tone:level=>tones.push(level)};
  c.collectionAward=(...args)=>{awards.push(args);c.tone(1)};
  vm.createContext(c);vm.runInContext(player,c);return {c,audio,sources,mixes,tones,toasts,awards};
 }
@@ -54,4 +54,16 @@ test('single student and preview still work; muted awards create no sources',asy
  c.collectionAward(before,after,['s1']);await tick();assert.equal(sources.length,1);
  c.audioEnabled=false;c.stopStudentSound();c.collectionAward(before,after,['s1']);await tick();assert.equal(sources.length,1);
  await c.playStudentSound(blob('preview'));assert.equal(sources[1].buffer.id,'preview');
+});
+
+test('deduction plays the shared clip once for a batch, never for a blocked action or while muted',async()=>{
+ const rows=[{id:'s1',score:5},{id:'s2',score:5}];let blocked=false;
+ const {c,sources}=setup(ids=>{if(!blocked)rows.forEach(s=>{if(ids.includes(s.id))s.score--})});
+ c.students=rows;c.studentSounds.set('global:deduct',{blob:blob('deduct')});
+ c.studentSounds.set('p6:s1',{blob:blob('award')});
+ c.deduct(['s1','s2']);await tick();assert.equal(sources.length,1);assert.equal(sources[0].buffer.id,'deduct');
+ assert.deepEqual(rows.map(s=>s.score),[4,4]);
+ blocked=true;c.deduct(['s1']);await tick();assert.equal(sources.length,1);
+ blocked=false;c.audioEnabled=false;c.deduct(['s1']);await tick();assert.equal(sources.length,1);
+ c.audioEnabled=true;c.studentSounds.delete('global:deduct');c.deduct(['s1']);await tick();assert.equal(sources.length,1);
 });

@@ -2,6 +2,16 @@
 
 GitHub Pages 提供靜態前端，Google Apps Script 與原有 Google Sheets 儲存班級資料。
 
+## 2026-10-23 共用扣分音效
+
+到「設定 → 設定共用扣分音效」，直接錄音或上傳 MP3／M4A／WAV，試聽後按「儲存音效」。沿用最多 10 MB 輸入、保留前 8 秒、壓縮為 WAV 的音效編輯器，亦可下載或移除。開啟頁頂「音效」後，所有班別及學生扣分都使用同一段音效；每次扣分操作只播放一次。
+
+只在實際扣到分時播放。分數已是 0、缺席、同步衝突等未能扣分的情況不播放；不扣經驗、不覆寫個人加分錄音。沒有設定時維持無扣分音效。
+
+共用音效保存在本機 IndexedDB 的獨立 `global:deduct` 項目，所有班別共用，但裝置之間不會自動同步。完整備份會包含並可還原它；私人錄音不會寫入 Google 分數資料或公開倉庫。主網站只需前端發佈後重新整理，無需修改 Google `Code.gs`。
+
+已用合成 WAV、Chromium 模擬麥克風及模擬後台測試上傳、8 秒裁切、錄音、試聽、儲存、跨班扣分、靜音／零分／缺席、移除、重開及備份還原，涵蓋桌面與 iPad 尺寸；並非真實 iPad Safari 麥克風測試。
+
 ## 2026-10-23 全班加分同步音效
 
 開啟頁頂「音效」後，按「全班 +1 ★」會同步播放本次實際獲加分、且已在此裝置設定個人錄音的學生音效；整組加分同樣支援。缺席或分數已達上限者不參與。沒有任何可播放錄音時，維持原本提示音。單人加分及錄音試聽仍可使用。
@@ -76,6 +86,7 @@ python3 -B tests/browser_rewards.py
 python3 -B tests/browser_classes.py
 python3 -B tests/browser_gift_repeat.py
 python3 -B tests/browser_student_audio.py
+python3 -B tests/browser_deduction_audio.py
 ```
 
 瀏覽器測試需要 Python Playwright 和 `/usr/bin/chromium`，會自行啟動本機伺服器，所有 Google 請求均由測試攔截，使用人工產生的測試學生與圖片，**不會登入或寫入真實後台**。
