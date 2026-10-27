@@ -27,7 +27,8 @@ def check(browser,base,options,label):
         }
         const row={key:'p4:s1',blob:encodeSoundWav(ctx.createBuffer(1,22050*2,22050))};await soundStore('readwrite',s=>s.put(row));studentSounds.set(row.key,row);
     }''')
-    page.locator('#sound').click();page.locator('#all').click()
+    assert page.locator('#sound').get_attribute('aria-pressed')=='true'
+    page.locator('#all').click()
     page.wait_for_function('window.audioStarts.length===3')
     starts=page.evaluate('window.audioStarts');assert len({s['at'] for s in starts})==1
     assert [round(s['duration'],1) for s in starts]==[1.1,1.2,1.3]
@@ -56,10 +57,12 @@ def check(browser,base,options,label):
     assert page.evaluate('playingSources.size')==0
     page.evaluate("delete document.hidden")
     page.wait_for_function('!dirty && !saving')
+    page.locator('#sound').click();assert page.evaluate('audioEnabled') is False
     # IndexedDB clips survive a reload and are still aligned on the next class award.
     page.reload();page.wait_for_function('loaded && !loading');page.evaluate('soundReady')
     assert page.evaluate("studentSounds.has('p6:s1')")
-    page.locator('#sound').click();page.locator('#all').click();page.wait_for_function('window.audioStarts.length===3')
+    assert page.locator('#sound').get_attribute('aria-pressed')=='true'
+    page.locator('#all').click();page.wait_for_function('window.audioStarts.length===3')
     starts=page.evaluate('window.audioStarts');assert len({s['at'] for s in starts})==1
     # Preview still plays while the global award sound toggle is off.
     page.locator('#sound').click()

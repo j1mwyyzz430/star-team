@@ -58,7 +58,8 @@ def check(browser,base,options,label):
     assert page.evaluate('playingSources.size')==0
     close_settings(page)
     # Current audio data is local, never sent as part of score saves.
-    page.locator('#sound').click();page.locator('[data-sub="s1"]').click(force=True)
+    assert page.locator('#sound').get_attribute('aria-pressed')=='true'
+    page.locator('[data-sub="s1"]').click(force=True)
     page.wait_for_function('window.soundStarts.length===2');saved(page)
     assert backend.state['rosters']['p6'][0]['score']==11
     assert backend.state['rosters']['p6'][0]['xp']==before['rosters']['p6'][0]['xp']
@@ -72,6 +73,10 @@ def check(browser,base,options,label):
     assert page.evaluate('window.soundStarts.at(-1)')==8
     page.reload();page.wait_for_function('loaded && !loading');page.evaluate('soundReady')
     assert page.evaluate("studentSounds.has('global:deduct')")
+    assert page.evaluate('audioEnabled') is True
+    page.locator('[data-sub="s1"]').click(force=True)
+    page.wait_for_function('window.soundStarts.length===1');saved(page)
+    page.evaluate('()=>{stopStudentSound();window.soundStarts=[]}')
     # Actual MediaRecorder with Chromium's synthetic microphone, not a real microphone.
     settings(page);page.locator('#sound-record').click();page.wait_for_function("recording?.state==='recording'")
     page.evaluate('window.fixtureTrack=recordStream.getTracks()[0]')
@@ -90,7 +95,7 @@ def check(browser,base,options,label):
     page.wait_for_function("!studentSounds.has('global:deduct') && !soundBusy")
     assert page.evaluate("studentSounds.has('p4:s1')")
     close_settings(page)
-    page.locator('#sound').click();page.locator('[data-sub="s1"]').click(force=True);saved(page)
+    page.locator('[data-sub="s1"]').click(force=True);saved(page)
     assert page.evaluate('window.soundStarts.length')==0
     page.locator('#settings').click();page.once('dialog',lambda d:d.accept())
     page.locator('#import-file').set_input_files({'name':'fixture-backup.json','mimeType':'application/json','buffer':json.dumps(backup).encode()})
