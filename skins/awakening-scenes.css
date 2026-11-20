@@ -1,0 +1,97 @@
+/* A full-viewport stage; the collectible art is the world, not a picture in a box. */
+#collection-overlay.awakening-overlay{overflow:hidden;pointer-events:auto;isolation:isolate;color:#fff8e9;touch-action:manipulation}
+#collection-overlay.awakening-overlay[hidden]{display:none!important}
+#collection-overlay #collection-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+.awakening-world,.awakening-world-shade,.awakening-aura{position:absolute;inset:0;pointer-events:none}
+.awakening-world{z-index:0;background:radial-gradient(ellipse at 75% 40%,var(--scene-color),var(--scene-dark) 75%);overflow:hidden}
+.awakening-art{display:block;width:100%;height:100%;object-fit:cover;object-position:70% 50%;transform-origin:70% 40%;animation:awakeningWorld var(--awakening-duration) cubic-bezier(.15,.7,.2,1) both}
+.awakening-world-shade{background:linear-gradient(90deg,#030817bb,transparent 68%),linear-gradient(0deg,#030817dc,transparent 57%)}
+.awakening-aura{z-index:1;opacity:.55;background:radial-gradient(ellipse at 27% 44%,color-mix(in srgb,var(--scene-color) 45%,transparent),transparent 52%);animation:awakeningAura var(--awakening-duration) ease-out both}
+.awakening-topline{position:absolute;z-index:8;top:max(22px,env(safe-area-inset-top));left:max(28px,env(safe-area-inset-left));right:150px;display:flex;justify-content:space-between;gap:20px;font-size:12px;letter-spacing:.17em;font-weight:750;text-shadow:0 2px 8px #000;color:#fff4ceba}
+#awakening-close{pointer-events:auto;position:absolute;z-index:12;top:max(14px,env(safe-area-inset-top));right:max(20px,env(safe-area-inset-right));border:1px solid #fff5;background:#11192c99;color:#fff;border-radius:999px;min-height:44px;padding:8px 18px;backdrop-filter:blur(8px);font-size:15px}
+.awakening-hero{position:absolute;z-index:6;left:27%;top:42%;width:min(40vmin,370px);aspect-ratio:1;transform:translate(-50%,-50%)}
+#collection-overlay .awakening-face{position:relative;aspect-ratio:1;width:100%;isolation:isolate;animation:awakeningArrival var(--awakening-duration) cubic-bezier(.16,.8,.22,1) both}
+#collection-overlay .awakening-face>.avatar{display:grid;width:100%;height:100%;min-width:0;margin:0;aspect-ratio:1;object-fit:cover;object-position:50% 22%;border:7px solid #fff7db;border-radius:50%;font-size:clamp(64px,12vmin,150px);background:#192b46;color:white;box-shadow:0 0 0 2px var(--member-color,var(--scene-color)),0 0 50px color-mix(in srgb,var(--member-color,var(--scene-color)) 55%,transparent),0 18px 60px #0008}
+.awakening-orbit{position:absolute;inset:-20px;z-index:-1;border:2px solid var(--member-color,var(--scene-color));border-left-color:transparent;border-right-color:#fff7db;box-shadow:0 0 20px color-mix(in srgb,var(--member-color,var(--scene-color)) 25%,transparent);border-radius:50%;animation:awakeningOrbit 5s linear infinite}
+.awakening-orbit:after{content:'';position:absolute;inset:-10px;border:1px dashed #fff7db88;border-radius:50%}
+.awakening-copy{position:absolute;z-index:7;left:7%;bottom:12%;width:42%;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;text-shadow:0 3px 12px #000,0 0 35px #000b;animation:awakeningWords var(--awakening-duration) ease-out both}
+.awakening-eyebrow{color:var(--scene-color);font-size:clamp(12px,1.5vmin,20px);font-weight:850;letter-spacing:.26em}
+.awakening-name{font-size:clamp(26px,4.7vmin,54px);font-weight:850;line-height:1.15;overflow-wrap:anywhere;max-width:100%}
+.awakening-title{font-size:clamp(38px,7.5vmin,90px);font-weight:950;letter-spacing:.015em;line-height:1.15;color:#ffedb1;overflow-wrap:anywhere;max-width:100%}
+.awakening-copy small{font-size:clamp(12px,1.65vmin,19px);color:#fff4d4cc;line-height:1.4;max-width:100%;overflow-wrap:anywhere}
+.awakening-summon-star{display:none;position:absolute;z-index:2;left:50%;top:40%;transform:translate(-50%,-50%);font-size:78vmin;color:#ffe5a0;text-shadow:0 0 50px var(--scene-color);line-height:1;opacity:.25;pointer-events:none;animation:awakeningStarBloom var(--awakening-duration) ease-out both}
+.awakening-crown{display:none;position:absolute;left:14%;top:-27%;width:72%;height:32%;overflow:visible;fill:#ffe5a0;stroke:#fff6d9;stroke-width:3;filter:drop-shadow(0 0 16px #ffca62);animation:awakeningCrown var(--awakening-duration) ease-out both}
+.awakening-progress{position:absolute;bottom:0;left:0;right:0;height:3px;z-index:10;background:#fff1;pointer-events:none}
+.awakening-progress i{display:block;width:100%;height:100%;background:var(--scene-color);box-shadow:0 0 12px var(--scene-color);transform-origin:left}
+/* Summoning: centered portrait, a star expands behind it and the arena opens out. */
+.awakening-big .awakening-hero,.awakening-wheel .awakening-hero{left:50%;top:39%;width:min(36vmin,330px)}
+.awakening-big .awakening-copy,.awakening-wheel .awakening-copy{left:10%;width:80%;bottom:10%}
+.awakening-big .awakening-summon-star,.awakening-wheel .awakening-summon-star{display:block}
+.awakening-big .awakening-world-shade,.awakening-wheel .awakening-world-shade{background:radial-gradient(ellipse at 50% 38%,#07102533,#03081766),linear-gradient(0deg,#030817eb,transparent 65%)}
+.awakening-big .awakening-art,.awakening-wheel .awakening-art{object-position:70% 40%;animation-name:awakeningSummonWorld}
+.awakening-big .awakening-aura,.awakening-wheel .awakening-aura{background:radial-gradient(ellipse at 50% 40%,#ffe7a5aa,transparent 65%)}
+/* Rainbow: a spectrum arena, orbiting constellations and an earned stage-3 crown. */
+.awakening-rainbow .awakening-hero{left:50%;top:40%;width:min(36vmin,340px)}
+.awakening-rainbow .awakening-copy{left:8%;width:84%;bottom:8%}
+.awakening-rainbow .awakening-title{background:linear-gradient(110deg,#ffbbef,#ffeaa7 30%,#b4ffeb 55%,#a4d8ff 75%,#edc5ff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 3px 8px #000)}
+.awakening-rainbow .awakening-aura{inset:-50%;background:conic-gradient(from 20deg at 50% 50%,transparent,#d695ff55,transparent 20%,#72e2ff66,transparent 40%,#ffd67866,transparent 60%,#f58fbb55,transparent 80%,#c0ffdb55,transparent);animation:awakeningSpectrum var(--awakening-duration) ease-out both}
+.awakening-rainbow .awakening-world-shade{background:radial-gradient(ellipse at 50% 40%,#11132e44,#04081877),linear-gradient(0deg,#060b20ef,transparent 70%)}
+.awakening-rainbow .awakening-art{animation-name:awakeningCrownWorld}
+.awakening-rainbow.awakening-ultimate .awakening-crown{display:block}
+/* Every class member keeps their own portrait and collectible background. */
+.awakening-team{position:absolute;z-index:5;inset:70px 4vw 185px;display:grid;grid-template-columns:repeat(var(--team-cols),minmax(0,1fr));grid-template-rows:repeat(var(--team-rows),minmax(0,1fr));gap:12px}
+.awakening-member{position:relative;overflow:hidden;isolation:isolate;min-width:0;min-height:0;border:1px solid color-mix(in srgb,var(--member-color) 60%,transparent);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--member-dark);box-shadow:0 0 26px #0005;animation:awakeningMember var(--awakening-duration) ease-out both;animation-delay:var(--member-delay)}
+.awakening-member-art,.awakening-member-shade{position:absolute;inset:0;width:100%;height:100%;z-index:-2;object-fit:cover;object-position:70% 35%}
+.awakening-member-art{animation:awakeningWorld var(--awakening-duration) ease-out both}
+.awakening-member-shade{z-index:-1;background:linear-gradient(0deg,#050c20e8,transparent 80%),linear-gradient(90deg,#070d2222,#070d2244)}
+#collection-overlay .awakening-member .awakening-face{width:min(21vmin,210px);height:auto;flex-shrink:0;animation:none}
+#collection-overlay .awakening-member .awakening-face>.avatar{border-width:4px;font-size:clamp(28px,7vmin,90px)}
+.awakening-member .awakening-orbit{inset:-9px;border-width:1px}
+.awakening-member .awakening-orbit:after{inset:-5px}
+.awakening-member>strong{font-size:clamp(18px,2.8vmin,34px);line-height:1.2;text-align:center;max-width:94%;overflow-wrap:anywhere;text-shadow:0 2px 8px #000}
+.awakening-member>span{font-size:clamp(11px,1.6vmin,17px);color:#fff3cc;text-shadow:0 2px 8px #000;max-width:94%;text-align:center}
+.awakening-member-crown{position:absolute;right:15px;top:6px;font-style:normal;font-size:36px;color:#ffe3a0;text-shadow:0 0 15px #ffc65c}
+#collection-overlay .awakening-team-copy{left:5%;width:90%;bottom:24px;gap:4px}
+.awakening-team-copy .awakening-title{font-size:clamp(34px,5.8vmin,62px)}
+.awakening-group .awakening-summon-star{display:none}
+@keyframes awakeningWorld{0%{transform:scale(1.2);filter:brightness(.55)}28%{filter:brightness(1)}100%{transform:scale(1.02);filter:brightness(.9)}}
+@keyframes awakeningSummonWorld{0%{transform:scale(1.45);filter:brightness(.35)}22%{transform:scale(1.05);filter:brightness(1.12)}100%{transform:scale(1.12);filter:brightness(.85)}}
+@keyframes awakeningCrownWorld{0%{transform:scale(1.04);filter:brightness(.4)}28%{filter:brightness(1)}100%{transform:scale(1.16);filter:brightness(.85)}}
+@keyframes awakeningArrival{0%{opacity:0;transform:scale(.55) translateY(30px)}20%{opacity:1;transform:scale(1.035) translateY(0)}32%,100%{opacity:1;transform:scale(1)}}
+@keyframes awakeningAura{0%{opacity:0;transform:scale(.6)}30%{opacity:.75}100%{opacity:.2;transform:scale(1.3)}}
+@keyframes awakeningOrbit{to{transform:rotate(360deg)}}
+@keyframes awakeningWords{0%,12%{opacity:0;transform:translateY(20px)}30%,100%{opacity:1;transform:translateY(0)}}
+@keyframes awakeningStarBloom{0%,8%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(-70deg)}32%{opacity:.48;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:.16;transform:translate(-50%,-50%) scale(1.15) rotate(18deg)}}
+@keyframes awakeningSpectrum{0%{opacity:0;transform:rotate(-30deg) scale(.6)}35%{opacity:.8}100%{opacity:.5;transform:rotate(30deg) scale(1.1)}}
+@keyframes awakeningCrown{0%,20%{opacity:0;transform:translateY(-45px) scale(1.3)}42%,100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes awakeningMember{0%{opacity:0;transform:translateY(28px) scale(.94)}25%,100%{opacity:1;transform:translateY(0) scale(1)}}
+@media(orientation:portrait){
+ .awakening-hero{left:50%;top:36%;width:min(52vw,360px)}
+ .awakening-copy{left:6%;width:88%;bottom:15%}
+ .awakening-art{object-position:66% 50%}
+ .awakening-big .awakening-hero,.awakening-wheel .awakening-hero,.awakening-rainbow .awakening-hero{top:35%;width:min(50vw,330px)}
+ .awakening-big .awakening-copy,.awakening-wheel .awakening-copy,.awakening-rainbow .awakening-copy{bottom:13%}
+ .awakening-world-shade{background:linear-gradient(0deg,#030817ef,transparent 90%)}
+ .awakening-team{inset:72px 16px 175px;gap:10px}
+ .awakening-member>strong{font-size:clamp(16px,3vw,30px)}
+ .awakening-member>span{font-size:clamp(10px,2vw,16px)}
+ .awakening-topline{left:18px;right:120px;font-size:10px;letter-spacing:.08em;flex-direction:column;gap:5px}
+ #awakening-close{right:12px}
+}
+@media(max-height:540px) and (orientation:landscape){
+ .awakening-hero,.awakening-big .awakening-hero,.awakening-wheel .awakening-hero,.awakening-rainbow .awakening-hero{top:40%;width:32vh}
+ .awakening-copy,.awakening-big .awakening-copy,.awakening-wheel .awakening-copy,.awakening-rainbow .awakening-copy{bottom:6%;gap:3px}
+ .awakening-name{font-size:25px}.awakening-title{font-size:38px}.awakening-copy small{font-size:11px}
+ .awakening-team{inset:55px 20px 110px;gap:7px}
+ .awakening-member{gap:3px;border-radius:12px}.awakening-member>strong{font-size:16px}.awakening-member>span{font-size:10px}
+ #collection-overlay .awakening-member .awakening-face{width:14vmin}
+ .awakening-team-copy .awakening-title{font-size:30px}.awakening-team-copy .awakening-eyebrow{font-size:11px}
+ #collection-overlay .awakening-team-copy{bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){.awakening-overlay *{animation:none!important}}
+
+@supports(width:1cqw){
+ .awakening-member{container-type:size}
+ #collection-overlay .awakening-member .awakening-face{width:min(50cqh,50cqw,210px);height:auto}
+ @media(max-height:540px) and (orientation:landscape){#collection-overlay .awakening-member .awakening-face{width:min(42cqh,50cqw,210px)}}
+}

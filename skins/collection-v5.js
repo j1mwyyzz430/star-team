@@ -36,7 +36,7 @@ function collectionAward(before,after,ids){
  // A class award may include both locked and awakened students. Only the latter perform.
  const unlocked=changed.filter(collectionCanPlay),performers=unlocked.length?unlocked:changed;
  const s=highest(performers),kind=priority(s)===3?'rainbow':priority(s)===2?'big':'small';
- collectionPlay(s,kind,{names:performers.map(s=>s.name)});tone(priority(highest(changed))===1?0:1);
+ collectionPlay(s,kind,{names:performers.map(s=>s.name),participants:performers});tone(priority(highest(changed))===1?0:1);
  const newly=changed.flatMap(s=>collectionRoad.filter(m=>m.xp>(before.find(b=>b.id===s.id)?.xp??before.find(b=>b.id===s.id)?.score??0)&&m.xp<=(s.xp??s.score)).map(m=>s.name+'：'+m.name));
  if(newly.length)toast('新收藏！'+newly.join('、'));else if(kind==='small')toast(changed.length===1?'＋1 ★ 太棒了！':changed.length+' 位學生 ＋1 ★');
 }
