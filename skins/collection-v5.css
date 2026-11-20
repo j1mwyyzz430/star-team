@@ -43,3 +43,11 @@
 @media(max-width:380px){#students .student-top>.avatar{width:78px;height:78px;min-width:78px}#students .student-name{font-size:21px}#students .plus{width:32px;height:32px;min-width:32px}.collection-emblem{display:none}}
 .calm .awakened .skin-visuals:after{animation:none;opacity:.2}
 @media(prefers-reduced-motion:reduce){.awakened .skin-visuals:after{animation:none;opacity:.2}.collection-overlay{display:none}}
+/* Larger roster portraits stay in the left third, keeping the collectible art visible. */
+#students .student-top{display:grid;grid-template-columns:clamp(104px,34%,144px) minmax(0,1fr) 40px;gap:12px}
+#students .student-top>.avatar{width:100%;height:auto;min-width:0;aspect-ratio:1;object-fit:cover;font-size:44px}
+#students .student-top>div{min-width:0}
+#students .student-top .student-name{max-width:100%}
+#students .student-top .small{display:block;width:fit-content;max-width:100%;overflow-wrap:anywhere}
+@media(max-width:420px){#students .student-top{grid-template-columns:110px minmax(0,1fr) 32px;gap:8px}#students .student-top>.plus{width:32px;height:32px;min-width:32px}}
+@media(max-width:380px){#students .student-top{grid-template-columns:92px minmax(0,1fr) 32px}}
