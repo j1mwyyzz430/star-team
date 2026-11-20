@@ -3,28 +3,26 @@
 // changes XP, changes wheel odds, or writes separate unlock flags.
 const collectionBeasts=skins.filter(k=>k.tier===0&&!k.series).sort((a,b)=>a.level-b.level);
 const collectionTitles={fire:'熔火龍息',ice:'冰河踏境',rainbow:'萬蝶光海',gold:'獅皇日輪',nature:'萬葉甦生',storm:'蒼雷奔襲',tide:'星海躍潮',moon:'月影九尾',aurora:'風嵐天幕',comet:'彗星疾行',time:'時輪逆轉',eclipse:'日蝕加冕',crystal:'晶龍稜域',void:'虛空裂界',cosmos:'玄武星圖',seraph:'六劍聖陣',omni:'萬象祥雲',genesis:'創世展翼',rail:'磁軌躍遷',sonic:'音浪主場',mecha:'天穹王座'};
-function collectionStart(k){const i=collectionBeasts.findIndex(b=>b.id===k?.id);return i<0?Infinity:100+i*120+5*i*(i-1)}
 function collectionExtra(s){return Math.max(0,(s?.xp??s?.score??0)-xpAtLevel(100))}
-function collectionStage(s,k=skinOf(s)){if(!k||k.tier!==0)return 0;if(k.series==='mecha')return canEquip(s,k)?3:0;const n=collectionExtra(s)-collectionStart(k);return n<0?0:n<40?1:n<80?2:3}
+function collectionStage(s,k=skinOf(s)){if(!k||k.tier!==0)return 0;if(k.series==='mecha')return canEquip(s,k)?3:0;return (s?.xp??s?.score??0)>=xpAtLevel(100)?3:0}
 function collectionCanPlay(s){return levelOf(s).level>=100&&collectionStage(s)>=2}
-function collectionMilestones(){return [...collectionBeasts.flatMap(k=>['專屬邊框','出場動畫','終極演出'].map((name,i)=>({xp:xpAtLevel(100)+collectionStart(k)+40*i,name:k.name+' · '+name,id:k.id,stage:i+1}))),...skins.filter(k=>k.series==='mecha').map(k=>({xp:skinUnlockXp(k),name:k.name+' · 新角色',id:k.id,stage:3}))].sort((a,b)=>a.xp-b.xp)}
+function collectionMilestones(){return [...collectionBeasts.flatMap(k=>['專屬邊框','出場動畫','終極演出'].map((name,i)=>({xp:xpAtLevel(100),name:k.name+' · '+name,id:k.id,stage:i+1}))),...skins.filter(k=>k.series==='mecha').map(k=>({xp:skinUnlockXp(k),name:k.name+' · 新角色',id:k.id,stage:3}))].sort((a,b)=>a.xp-b.xp)}
 const collectionRoad=collectionMilestones();
-function collectionNext(s){return collectionRoad.find(m=>m.xp>(s.xp??s.score??0))}
+function collectionNext(s){const next=collectionRoad.find(m=>m.xp>(s.xp??s.score??0));return next?.xp===xpAtLevel(100)?{...next,name:'全部神獸覺醒（邊框、出場、終極）'}:next}
 let collectionTab='beasts',collectionScene=null,collectionRaf=0,collectionLastFrame=0;
-const collectionOldLevel=levelMarkup,collectionOldLayer=skinLayer,collectionOldClass=skinClass,collectionOldWardrobe=renderWardrobe,collectionOldOpen=openSkin,collectionOldWinner=showWinnerSkin;
-levelMarkup=function(s){if(levelOf(s).level<100)return collectionOldLevel(s);const next=collectionNext(s),xp=s.xp??s.score,done=collectionRoad.filter(m=>m.xp<=xp).length,prev=collectionRoad.filter(m=>m.xp<=xp).at(-1)?.xp??xpAtLevel(100),progress=next?Math.min(100,100*(xp-prev)/(next.xp-prev)):100;return '<div class="level-row"><span class="level-badge">Lv.100</span><span>覺醒收藏 '+done+'/'+collectionRoad.length+' · '+(next?'再 '+(next.xp-xp)+' 經驗':'全收藏完成')+'</span></div><div class="xp-track" aria-label="覺醒收藏進度 '+Math.round(progress)+'%"><i style="width:'+progress+'%"></i></div>'};
+const collectionOldLayer=skinLayer,collectionOldClass=skinClass,collectionOldWardrobe=renderWardrobe,collectionOldOpen=openSkin,collectionOldWinner=showWinnerSkin;
 skinClass=function(s){return collectionOldClass(s)+(collectionStage(s)?' awakened stage-'+collectionStage(s):'')};
 skinLayer=function(s){const stage=collectionStage(s);return collectionOldLayer(s).replace('class="skin-border"','class="skin-border" data-awakening="'+stage+'"')+(stage?'<span class="awakening-seal" aria-hidden="true">'+['','Ⅰ','Ⅱ','Ⅲ'][stage]+'</span>':'')};
 function collectionSwatch(k){return '<div class="skin-swatch" style="'+skinStyle({theme:k.id})+'">'+artMarkup(k)+'<span class="skin-tier">'+(k.series?'機甲':'覺醒')+'</span><span class="skin-swatch-name">'+esc(k.name)+'</span></div>'}
 renderWardrobe=function(){collectionOldWardrobe();const s=students.find(s=>s.id===$('#skin-student').value)||students[0];$('#skin-filters').hidden=collectionTab!=='beasts';if(!s){$('#collection-summary').innerHTML='';return}const xp=s.xp??s.score,next=collectionNext(s),done=collectionRoad.filter(m=>m.xp<=xp).length;
- $('#collection-summary').innerHTML='<div class="collection-banner"><div><span class="eyebrow">CHAPTER II · 專屬收藏</span><h3>'+ (levelOf(s).level<100?'先收藏角色，再收藏專屬演出':'Lv.100 之後，冒險繼續')+'</h3><p>'+esc(s.name)+' · '+done+' / '+collectionRoad.length+' 項專屬收藏 · '+collectionExtra(s)+' 覺醒經驗</p><small>'+(next?'下一項：'+esc(next.name)+' · 再 '+(next.xp-xp)+' 經驗':'全部解鎖！選擇你最喜歡的角色，繼續集星。')+'</small></div><span class="collection-emblem" aria-hidden="true">✦</span></div>';
- if(collectionTab==='awakening'){$('#skin-grid').innerHTML=collectionBeasts.map((k,i)=>{const stage=collectionStage(s,k);return '<article class="skin-tile awakening-tile" data-tier="0">'+collectionSwatch(k)+'<p class="small">第 '+(i+1)+' 位 · '+esc(collectionTitles[k.fx])+'</p><div class="awakening-steps">'+['專屬邊框','出場動畫','終極演出'].map((label,j)=>'<div class="'+(stage>j?'earned':'')+'"><b>'+(stage>j?'✓':'◇')+' '+label+'</b><small>100 級後 ＋'+(collectionStart(k)+j*40)+' 經驗</small></div>').join('')+'</div><button data-skin-preview="'+k.id+'">預覽專屬演出</button><small class="collection-auto">'+(stage?'已解鎖部分會在裝備此角色時自動啟用':'免費解鎖；收藏角色與演出分開累積')+'</small></article>'}).join('')}
+ $('#collection-summary').innerHTML='<div class="collection-banner"><div><span class="eyebrow">CHAPTER II · 專屬收藏</span><h3>'+ (levelOf(s).level<100?'Lv.100 解鎖全部神獸覺醒':'神獸覺醒全解鎖，繼續升級收集機甲')+'</h3><p>'+esc(s.name)+' · '+done+' / '+collectionRoad.length+' 項專屬收藏 · '+collectionExtra(s)+' 覺醒經驗</p><small>'+(next?'下一項：'+esc(next.name)+' · 再 '+(next.xp-xp)+' 經驗':'全部解鎖！選擇你最喜歡的角色，繼續集星。')+'</small></div><span class="collection-emblem" aria-hidden="true">✦</span></div>';
+ if(collectionTab==='awakening'){$('#skin-grid').innerHTML=collectionBeasts.map((k,i)=>{const stage=collectionStage(s,k);return '<article class="skin-tile awakening-tile" data-tier="0">'+collectionSwatch(k)+'<p class="small">第 '+(i+1)+' 位 · '+esc(collectionTitles[k.fx])+'</p><div class="awakening-steps">'+['專屬邊框','出場動畫','終極演出'].map((label,j)=>'<div class="'+(stage>j?'earned':'')+'"><b>'+(stage>j?'✓':'◇')+' '+label+'</b><small>Lv.100 全部解鎖</small></div>').join('')+'</div><button data-skin-preview="'+k.id+'">預覽專屬演出</button><small class="collection-auto">'+(stage?'全部覺醒已解鎖，裝備此角色時自動啟用':'達到 Lv.100 即免費解鎖全部覺醒')+'</small></article>'}).join('')}
  else{$('#skin-grid').innerHTML=skins.filter(k=>collectionTab==='mecha'?k.series==='mecha':!k.series&&(skinFilter==='all'||String(k.tier)===skinFilter)).map(k=>'<article class="skin-tile '+(s.theme===k.id?'equipped':'')+'" data-tier="'+k.tier+'">'+(k.series?collectionSwatch(k):'<div class="skin-swatch" style="'+skinStyle({theme:k.id})+'">'+artMarkup(k)+'<span class="skin-tier">T'+k.tier+'</span><span class="skin-swatch-name">'+esc(k.name)+'</span></div>')+'<p class="small">'+(s.theme===k.id?'✓ 使用中':canEquip(s,k)?'已解鎖 · 免費換裝':skinUnlockLabel(k)+' 解鎖')+'</p><button data-skin-preview="'+k.id+'">試看'+(k.tier<2?'特效':'名片')+'</button></article>').join('')}
 };
 $('#skin-student').onchange=renderWardrobe;
 $('#collection-tabs').onclick=e=>{const b=e.target.closest('[data-collection]');if(!b)return;collectionTab=b.dataset.collection;$$('#collection-tabs button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderWardrobe()};
 openSkin=function(id){collectionOldOpen(id);const k=skins.find(k=>k.id===id),s=students.find(s=>s.id===$('#skin-student').value);if(!k||!s)return;const isMythic=k.tier===0;$('#collection-big-demo').hidden=!isMythic;$('#collection-super-demo').hidden=!isMythic;if(!isMythic)return;
- const preview={...s,theme:id,xp:Math.max(s.xp??s.score,k.series?skinUnlockXp(k):xpAtLevel(100)+collectionStart(k)+80)};
+ const preview={...s,theme:id,xp:Math.max(s.xp??s.score,k.series?skinUnlockXp(k):xpAtLevel(100))};
  $('#skin-stage').innerHTML='<article id="skin-preview-card" class="card'+skinClass(preview)+'" style="'+skinStyle(preview)+'">'+skinLayer(preview)+'<div class="student-top">'+avatar(s)+'<strong class="student-name">'+esc(s.name)+'</strong></div><div class="preview-score">★ '+s.score+'</div><div class="preview-copy">完整專屬預覽 · 不會改分數或解鎖進度</div>'+skinLabel(preview)+'</article>';
  $('#skin-title').textContent=(k.series?'星核機甲 · ':'神獸覺醒 · ')+k.name;$('#skin-detail').textContent=collectionTitles[k.fx]+'：'+k.desc+'。裝備後，已解鎖的專屬效果會自動啟用。';$('#skin-notice').textContent='預覽展示完整演出；'+(k.series?(canEquip(s,k)?'機甲已解鎖。':skinUnlockLabel(k)+' 解鎖。'):'你已取得 '+collectionStage(s,k)+' / 3 項專屬。')+' 換裝、試播均不扣星星。';
 };
@@ -37,13 +35,13 @@ function collectionAward(before,after,ids){
  const unlocked=changed.filter(collectionCanPlay),performers=unlocked.length?unlocked:changed;
  const s=highest(performers),kind=priority(s)===3?'rainbow':priority(s)===2?'big':'small';
  collectionPlay(s,kind,{names:performers.map(s=>s.name),participants:performers});tone(priority(highest(changed))===1?0:1);
- const newly=changed.flatMap(s=>collectionRoad.filter(m=>m.xp>(before.find(b=>b.id===s.id)?.xp??before.find(b=>b.id===s.id)?.score??0)&&m.xp<=(s.xp??s.score)).map(m=>s.name+'：'+m.name));
+ const newly=changed.flatMap(s=>{const prev=before.find(b=>b.id===s.id),oldXp=prev?.xp??prev?.score??0,xp=s.xp??s.score;const rewards=collectionRoad.filter(m=>m.xp>xpAtLevel(100)&&m.xp>oldXp&&m.xp<=xp).map(m=>m.name);if(oldXp<xpAtLevel(100)&&xp>=xpAtLevel(100))rewards.unshift('全部神獸覺醒已解鎖');return rewards.map(name=>s.name+'：'+name)});
  if(newly.length)toast('新收藏！'+newly.join('、'));else if(kind==='small')toast(changed.length===1?'＋1 ★ 太棒了！':changed.length+' 位學生 ＋1 ★');
 }
 showWinnerSkin=function(s){collectionOldWinner(s);collectionPlay(s,'wheel')};
 function collectionEnd(){collectionScene=null;$('#collection-overlay').hidden=true;$('#collection-scene').innerHTML='';if(collectionRaf&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(collectionRaf);collectionRaf=0}
 function collectionPlay(s,kind,{preview=false,stage=collectionStage(s),names=[s.name]}={}){
- // Stage 1 unlocks only the border; stage 2 unlocks the full-screen entrance.
+ // All beast stages unlock at Lv.100; mecha retain their individual XP thresholds.
  // Explicit wardrobe previews may show locked effects without granting them.
  if(!preview){
   stage=collectionStage(s);

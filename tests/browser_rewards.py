@@ -27,15 +27,15 @@ def check_rewards(browser, base, options, label):
     # Exercise the actual renderer, including the full-screen popover wrapper.
     result = page.evaluate("""() => {
         const base=xpAtLevel(100),skin=skins.find(k=>k.id==='t0-inferno');
-        const entry=base+collectionStart(skin)+40;
+        const entry=base;
         const mecha=skins.find(k=>k.id==='m1-rail');
         const cases=[
             ['plain below 100','default',0,false],
             ['mythic below 100','t0-inferno',base-1,false],
-            ['level 100 without awakening','t0-inferno',base,false],
-            ['border only','t0-inferno',entry-40,false],
+            ['all awakening at level 100','t0-inferno',base,true],
+            ['final beast below 100','t0-genesis',base-1,false],
             ['one XP before entrance','t0-inferno',entry-1,false],
-            ['entrance unlocked','t0-inferno',entry,true],
+            ['final beast fully awakened at 100','t0-genesis',entry,true],
             ['ultimate unlocked','t0-inferno',entry+40,true],
             ['mecha still locked','m1-rail',skinUnlockXp(mecha)-1,false],
             ['mecha unlocked','m1-rail',skinUnlockXp(mecha),true],

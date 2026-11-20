@@ -70,9 +70,9 @@ def run(browser, base, width, height, fallback=False):
     }""")
     assert seen==[f'fixture-{i}' for i in range(19)],seen
     page.locator('#awakening-close').click();assert page.evaluate('collectionScene===null')
-    # Stage 2 gets the entrance, but does not get the earned ultimate crown.
-    page.evaluate("""()=>{const k=skinOf(fixtureStudent),s={...fixtureStudent,xp:xpAtLevel(100)+collectionStart(k)+40};collectionPlay(s,'rainbow');cancelAnimationFrame(collectionRaf);awakeningRenderAt(collectionScene,1800)}""")
-    assert not page.locator('.awakening-crown').is_visible()
+    # All beast stages, including the ultimate crown, unlock exactly at Lv.100.
+    page.evaluate("""()=>{const k=skinOf(fixtureStudent),s={...fixtureStudent,xp:xpAtLevel(100)};collectionPlay(s,'rainbow');cancelAnimationFrame(collectionRaf);awakeningRenderAt(collectionScene,1800)}""")
+    assert page.locator('.awakening-crown').is_visible()
     page.evaluate('collectionEnd()')
     # Broken portrait and artwork recover without broken-image icons.
     page.evaluate("fixtureStudent.photo='/missing-fixture-photo.png'")
@@ -101,7 +101,7 @@ def run(browser, base, width, height, fallback=False):
         assert page.evaluate('collectionScene===null')
     assert not errors,errors
     context.close()
-    print(f'PASS {width}x{height}, fallback={fallback}: viewport, portrait ratio, three timings, paging, stage-2 crown, skip, missing photo, reduced motion, unchanged data')
+    print(f'PASS {width}x{height}, fallback={fallback}: viewport, portrait ratio, three timings, paging, Lv.100 ultimate crown, skip, missing photo, reduced motion, unchanged data')
 
 def main():
     server=ThreadingHTTPServer(('127.0.0.1',0),functools.partial(QuietHandler,directory=str(ROOT)))
