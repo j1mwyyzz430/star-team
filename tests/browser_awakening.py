@@ -86,14 +86,15 @@ def run(browser, base, width, height, fallback=False):
     if width==1280:
         page.emulate_media(reduced_motion='no-preference')
         page.locator('#all').click()
-        page.wait_for_function('collectionScene?.participants.length===5')
-        assert page.evaluate('collectionScene.participants.map(s=>s.id)')==[f's{i+1}' for i in range(5)]
+        page.wait_for_function("document.querySelectorAll('.collection-inline-award').length===5")
+        assert page.evaluate("[...document.querySelectorAll('.collection-inline-award')].map(e=>e.dataset.studentId)")==[f's{i+1}' for i in range(5)]
+        assert page.evaluate('collectionScene===null')
         page.wait_for_function('!dirty && !saving')
         for i,s in enumerate(backend.state['rosters']['p6']):
             assert s['score']==(13 if i<6 else 12 if i==6 else 999999)
             assert s['xp']==(20 if i==5 else 10020 if i<5 else 10000)
         # Actual animation clock finishes and removes the blocking layer.
-        page.wait_for_function('collectionScene===null',timeout=5000)
+        page.wait_for_function("document.querySelectorAll('.collection-inline-award').length===0",timeout=5000)
         assert not page.locator('#collection-overlay').is_visible()
         page.evaluate(PLAY,dict(kind='rainbow'))
         page.set_viewport_size({'width':822,'height':1280});page.evaluate('awakeningRenderAt(collectionScene,1800)');page.evaluate(BOUNDS)

@@ -70,9 +70,11 @@ def check_rewards(browser, base, options, label):
         collectionEnd();
         const before=[{...low,id:'s1',score:29},{...high,id:'s2',score:12}];
         const after=before.map(s=>({...s,score:s.score+1}));
-        collectionAward(before,after,['s1','s2']);
-        if(collectionScene?.s.id!=='s2'||collectionScene.names.join()!=='已覺醒測試')
-            throw Error('class award included a locked performer');
+        const originalInline=collectionInlineAward;let performers=[];
+        collectionInlineAward=people=>{performers=people;originalInline(people)};
+        try{collectionAward(before,after,['s1','s2'])}finally{collectionInlineAward=originalInline}
+        if(collectionScene||performers.length!==1||performers[0].id!=='s2')
+            throw Error('class award blocked scoring or included a locked performer');
         collectionEnd();
         showWinnerSkin(low);
         if(collectionScene)throw Error('locked wheel winner received a full-screen scene');

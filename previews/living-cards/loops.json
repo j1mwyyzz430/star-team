@@ -1,0 +1,421 @@
+{
+  "period_seconds": 8,
+  "star_preview": 5,
+  "silent": true,
+  "clips": [
+    {
+      "id": "t0-abyss",
+      "video": "loops/t0-abyss.mp4",
+      "bytes": 831862,
+      "sha256": "0f6723bda0fded9534fd7a285f1da47f8ee80dd0c518db597cb11143ade8e7b6",
+      "source_sha256": "9741647bd437cec5b151048a1c9388c7727c6ec789beda7058e1acd318c94dfd",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.371,
+        "loop_seam_difference": 1.083
+      }
+    },
+    {
+      "id": "t0-aurora",
+      "video": "loops/t0-aurora.mp4",
+      "bytes": 563835,
+      "sha256": "2e2ec280960f923eebb88132acc174f2612cd4df0f05b47966c0162be029af4b",
+      "source_sha256": "789a66659dcdbef79bebc3e7c0267c318ec13336dd8bc35ce4a39b2291d761e8",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.337,
+        "loop_seam_difference": 1.075
+      }
+    },
+    {
+      "id": "t0-chrono",
+      "video": "loops/t0-chrono.mp4",
+      "bytes": 305126,
+      "sha256": "0203535af315e6df31434e039caa983dc9c2495e9d78d86e25c80e26aa5c4724",
+      "source_sha256": "48f181c8a21f8d205fc021eefcc3e49be322780ca9155a6c18dae902bed4edde",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.204,
+        "loop_seam_difference": 1.083
+      }
+    },
+    {
+      "id": "t0-comet",
+      "video": "loops/t0-comet.mp4",
+      "bytes": 1072708,
+      "sha256": "254f709844a2d33c091a35e9c93e9411435a649642f94c9d74dd46b08a3241f0",
+      "source_sha256": "85c447ca3560c7587ad59ca37cc5981dccba696a5d63faef94f4adc4a7901cb8",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.333,
+        "loop_seam_difference": 1.17
+      }
+    },
+    {
+      "id": "t0-cosmos",
+      "video": "loops/t0-cosmos.mp4",
+      "bytes": 1025187,
+      "sha256": "38610ee2b16d396573f06d401d280b8f4053a8087c64a319f1ae785b9f2892c3",
+      "source_sha256": "b6e1248ad04b24a951427d3f73e8785050abdee78007bc2d04bbfd0cbb92a8d6",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.352,
+        "loop_seam_difference": 1.093
+      }
+    },
+    {
+      "id": "t0-crystal",
+      "video": "loops/t0-crystal.mp4",
+      "bytes": 465506,
+      "sha256": "019f4720c581c9bf12dd1295c89c1b68ba3b0798e24d8f2267c1c6237a362628",
+      "source_sha256": "36496c552beed20e09b26381680f04c950afc2d759b65e98391adff8b1246882",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.183,
+        "loop_seam_difference": 0.909
+      }
+    },
+    {
+      "id": "t0-eclipse",
+      "video": "loops/t0-eclipse.mp4",
+      "bytes": 592772,
+      "sha256": "4fdfb78e36d0ef38b4d2265aa239f8c43f2e97c5731280c047d3278c5bd9068d",
+      "source_sha256": "5a8abe47ad5b42b2af9d65e6f02acf249e9654b5b5c5193dab83318c87f0ec01",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.361,
+        "loop_seam_difference": 1.134
+      }
+    },
+    {
+      "id": "t0-genesis",
+      "video": "loops/t0-genesis.mp4",
+      "bytes": 620857,
+      "sha256": "9e2c0c83804de306df7713c9ca235e13b22a35b2124ec2e52b1668217494888e",
+      "source_sha256": "1d67f9c950f52cdcaaf6c53d2f6973597b3aff2efaabee28fd51011ffe73d24c",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.28,
+        "loop_seam_difference": 1.106
+      }
+    },
+    {
+      "id": "t0-glacier",
+      "video": "loops/t0-glacier.mp4",
+      "bytes": 1208542,
+      "sha256": "c01a764e0634acbf0cfb41c72438bfbeac06d4cfd1a161a7c1f0c6b7d268a17c",
+      "source_sha256": "0afee8c356b7fda964bf99a7775c82cf9b41940fc446f0742125c29d5d4d580f",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.3,
+        "loop_seam_difference": 1.042
+      }
+    },
+    {
+      "id": "t0-inferno",
+      "video": "loops/t0-inferno.mp4",
+      "bytes": 332449,
+      "sha256": "e89c9c36a42a1b8de993b9900e04065acff90b7dc98a76700f2f10590d58e202",
+      "source_sha256": "c003d244bf21a377a4d8f93a915af856d17966df90006d2d43e6581c731d5c6c",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.172,
+        "loop_seam_difference": 0.941
+      }
+    },
+    {
+      "id": "t0-lunar",
+      "video": "loops/t0-lunar.mp4",
+      "bytes": 307400,
+      "sha256": "8acea40c8cc27dcf649ed5f0c56ecdad6631e9ba78ec3a2142f502073988b554",
+      "source_sha256": "2d57f6e8425e8c94ceb3a08dea3d9bd03c7a6e22a3c4133193924fba70652f4b",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.329,
+        "loop_seam_difference": 1.145
+      }
+    },
+    {
+      "id": "t0-ocean",
+      "video": "loops/t0-ocean.mp4",
+      "bytes": 520250,
+      "sha256": "4af2f7ba034226352563f3c773f158b107e47271ac8b454010124975eb8c933a",
+      "source_sha256": "3c83705e59c94a37be534c8fee36bf5ce14095f9341f0103d6c10bb6378f6c9e",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.31,
+        "loop_seam_difference": 1.054
+      }
+    },
+    {
+      "id": "t0-omni",
+      "video": "loops/t0-omni.mp4",
+      "bytes": 921004,
+      "sha256": "a0ec0b27d21d9f45435d69c613f7449aa44071fb9bdea1525f470a4e6b564d49",
+      "source_sha256": "c961998a65eab2329853f255522472d542fc5da183a263fb206ffb81760d995f",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.38,
+        "loop_seam_difference": 1.136
+      }
+    },
+    {
+      "id": "t0-rainbow",
+      "video": "loops/t0-rainbow.mp4",
+      "bytes": 339735,
+      "sha256": "39beabe9f442398d545982fb7e1a95f93422ac9b113dedd540a742b880f21371",
+      "source_sha256": "525a2b665e738b9f9ddc3887928ac1e16f8519eb4ce1ab2ecb66eb88202b564e",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.309,
+        "loop_seam_difference": 1.153
+      }
+    },
+    {
+      "id": "t0-seraph",
+      "video": "loops/t0-seraph.mp4",
+      "bytes": 606162,
+      "sha256": "682b11d2be9b963239e57f3fdc288976149e1b254bcf086f1717fe2ac16ea095",
+      "source_sha256": "3d630b222f86d357bc3c653d345f975a6043c919f797a597df168d149dd3ba6c",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.193,
+        "loop_seam_difference": 1.012
+      }
+    },
+    {
+      "id": "t0-sovereign",
+      "video": "loops/t0-sovereign.mp4",
+      "bytes": 346785,
+      "sha256": "4ce27a9ac7a3347afae774fc26c39c0b947ef47b59d0c616010b41e035519c8b",
+      "source_sha256": "e1d81530edc0d4349f3250ad00af8fb530e90f30125762d80a64f33332fb7e12",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.305,
+        "loop_seam_difference": 1.183
+      }
+    },
+    {
+      "id": "t0-tempest",
+      "video": "loops/t0-tempest.mp4",
+      "bytes": 341360,
+      "sha256": "c679153cbd07e4dabd80d182fbe2fe85eacf255e9fa1f16cfe870bd150215d73",
+      "source_sha256": "dcf22108012dde8f8f708594d82fd6e0e891c5ea695260388ed1a31316eed5ad",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.307,
+        "loop_seam_difference": 1.145
+      }
+    },
+    {
+      "id": "t0-verdant",
+      "video": "loops/t0-verdant.mp4",
+      "bytes": 391014,
+      "sha256": "e0237b371ccf827786670116049ab4802167652083e6848f9cff5261eee39636",
+      "source_sha256": "4172f09507b827cead77edfeeb9819cbbc141179d66099f5bd8e22c1d7fcc100",
+      "codec_name": "h264",
+      "width": 512,
+      "height": 384,
+      "pix_fmt": "yuvj420p",
+      "r_frame_rate": "30/1",
+      "duration": "8.000000",
+      "nb_frames": "240",
+      "side_data_list": [
+        {}
+      ],
+      "decoded_checks": {
+        "frames": 240,
+        "moving_transitions": 239,
+        "mean_frame_difference": 0.39,
+        "loop_seam_difference": 1.241
+      }
+    }
+  ]
+}

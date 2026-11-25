@@ -28,13 +28,26 @@ openSkin=function(id){collectionOldOpen(id);const k=skins.find(k=>k.id===id),s=s
 };
 function collectionPreview(kind){const s=students.find(s=>s.id===$('#skin-student').value),k=skins.find(k=>k.id===previewSkinId);if(!s||!k)return;skinBurst($('#skin-preview-card'),{...s,theme:k.id});collectionPlay({...s,theme:k.id},kind,{preview:true,stage:3});}
 $('#skin-demo').onclick=()=>collectionPreview('small');$('#collection-big-demo').onclick=()=>collectionPreview('big');$('#collection-super-demo').onclick=()=>collectionPreview('rainbow');
+// Classroom scoring stays inside the cards; full-screen scenes are explicit previews/wheel wins.
+function collectionInlineAward(people){
+ if(motionReduced())return;
+ for(const s of people){
+  if(!collectionCanPlay(s))continue;const card=document.getElementById('card-'+s.id);if(!card)continue;
+  card.querySelector('.collection-inline-award')?.remove();
+  const kind=s.score%30===0?'rainbow':s.score%10===0?'big':'small',effect=document.createElement('div');
+  effect.className='collection-inline-award inline-'+kind;effect.dataset.studentId=s.id;effect.setAttribute('aria-hidden','true');
+  const label=document.createElement('strong');label.textContent=kind==='rainbow'?'彩色星星！':kind==='big'?'大星星！':'＋1 ★';effect.append(label);
+  for(let i=0;i<6;i++){const spark=document.createElement('i');spark.textContent='✦';spark.style.setProperty('--spark',i);effect.append(spark)}
+  card.append(effect);setTimeout(()=>effect.remove(),1400);
+ }
+}
 function collectionAward(before,after,ids){
  const changed=after.filter(s=>ids.includes(s.id)&&s.score>(before.find(b=>b.id===s.id)?.score??s.score));if(!changed.length)return;
  const priority=s=>s.score%30===0?3:s.score%10===0?2:1,highest=list=>list.reduce((a,b)=>priority(b)>priority(a)?b:a);
  // A class award may include both locked and awakened students. Only the latter perform.
  const unlocked=changed.filter(collectionCanPlay),performers=unlocked.length?unlocked:changed;
  const s=highest(performers),kind=priority(s)===3?'rainbow':priority(s)===2?'big':'small';
- collectionPlay(s,kind,{names:performers.map(s=>s.name),participants:performers});tone(priority(highest(changed))===1?0:1);
+ collectionInlineAward(performers);tone(priority(highest(changed))===1?0:1);
  const newly=changed.flatMap(s=>{const prev=before.find(b=>b.id===s.id),oldXp=prev?.xp??prev?.score??0,xp=s.xp??s.score;const rewards=collectionRoad.filter(m=>m.xp>xpAtLevel(100)&&m.xp>oldXp&&m.xp<=xp).map(m=>m.name);if(oldXp<xpAtLevel(100)&&xp>=xpAtLevel(100))rewards.unshift('全部神獸覺醒已解鎖');return rewards.map(name=>s.name+'：'+name)});
  if(newly.length)toast('新收藏！'+newly.join('、'));else if(kind==='small')toast(changed.length===1?'＋1 ★ 太棒了！':changed.length+' 位學生 ＋1 ★');
 }
