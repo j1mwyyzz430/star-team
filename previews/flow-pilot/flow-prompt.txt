@@ -1,0 +1,7 @@
+Animate the dragon in the uploaded image as a premium collectible fantasy card illustration. Preserve this exact dragon, its facial structure, horn shapes, dark scales, glowing orange fissures, volcanic landscape, original composition and painterly rendering. Keep the camera completely locked: no zoom, pan, orbit or cuts.
+
+Create one slow, natural breathing cycle. The dragon's neck and chest visibly expand and relax, the head makes a small deliberate turn of only a few degrees and gently returns to its original position, and the eyes blink once. Let the orange glow between the scales softly brighten with the breath. A small wisp of warm smoke escapes the nostrils. Background lava flows slowly and a few embers rise. The dragon remains the same size and stays in the original position. Keep the face, eyes, teeth and horns sharply defined and anatomically stable.
+
+Aim for an 8-second seamless ambient loop: start with the reference pose, perform the restrained character movement, and finish by returning naturally to that same pose and lighting with a continuous breathing rhythm. The character itself must move; do not substitute a camera move or floating particles for character animation. Motion should be clearly visible but calm enough for a classroom card background.
+
+No dramatic roaring, fire blast, large head swing, full-body turn, new limbs or wings, changed character design, melting textures, rubber-like deformation, camera shake, sudden flashes, added lettering or logos. No dialogue or music is needed.
